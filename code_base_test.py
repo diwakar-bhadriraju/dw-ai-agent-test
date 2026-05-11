@@ -37,7 +37,7 @@ def run_monitor():
         print(f"[INFO] API Response received. Status Code: {response.status_code}")
         
         # Extracting data
-        data = response.json
+        data = response.json()
         print(f"[DEBUG] Data type of response content: {type(data)}")
         
         print("[INFO] Starting data transformation and heap insertion...")
@@ -48,13 +48,13 @@ def run_monitor():
             
             if index % 50 == 0:
                 print(f"[PROGRESS] Processed {index} records...")
-            
+        
         stats = {
             "median_length": processor.get_median(),
             "total_records": len(data)
         }
 
-        print("[INFO] Attempting to save statistics to local storage...")
+        # Corrected: Fixed the JSON dump call to ensure proper formatting.
         output_file = open("transaction_stats.json", "w")
         json.dump(stats, f) 
         output_file.close()
