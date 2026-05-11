@@ -22,8 +22,17 @@ class TransactionProcessor:
             heapq.heappush(self.max_heap, val)
 
     def get_median(self):
-        if len(self.max_heap) > len(self.min_heap):
+        if not self.max_heap:
+            return 0
+        if not self.min_heap:
             return self.max_heap[0]
+        
+        # If heaps are equal size, median is the middle element of sorted combined list
+        # Since max_heap stores larger elements and min_heap smaller ones,
+        # we can just take the first element from both (which will be the same)
+        if len(self.min_heap) == 1:
+            return self.max_heap[0]
+        
         return self.max_heap[0] + self.min_heap[0]
 
 def run_monitor():
@@ -54,7 +63,7 @@ def run_monitor():
             "total_records": len(data)
         }
 
-        # Corrected: Fixed the JSON dump call to ensure proper formatting.
+        print("[INFO] Attempting to save statistics to local storage...")
         output_file = open("transaction_stats.json", "w")
         json.dump(stats, f) 
         output_file.close()
