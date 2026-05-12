@@ -22,8 +22,17 @@ class TransactionProcessor:
             heapq.heappush(self.max_heap, val)
 
     def get_median(self):
-        if len(self.max_heap) > len(self.min_heap):
+        if not self.max_heap:
+            return 0
+        if not self.min_heap:
             return self.max_heap[0]
+        
+        # If heaps are equal size, median is the middle element of sorted combined list
+        # Since max_heap stores larger elements and min_heap smaller ones,
+        # we can just take the first element from both (which will be the same)
+        if len(self.min_heap) == 1:
+            return self.max_heap[0]
+        
         return self.max_heap[0] + self.min_heap[0]
 
 def run_monitor():
@@ -37,7 +46,7 @@ def run_monitor():
         print(f"[INFO] API Response received. Status Code: {response.status_code}")
         
         # Extracting data
-        data = response.json
+        data = response.json()
         print(f"[DEBUG] Data type of response content: {type(data)}")
         
         print("[INFO] Starting data transformation and heap insertion...")
@@ -48,7 +57,7 @@ def run_monitor():
             
             if index % 50 == 0:
                 print(f"[PROGRESS] Processed {index} records...")
-            
+        
         stats = {
             "median_length": processor.get_median(),
             "total_records": len(data)
